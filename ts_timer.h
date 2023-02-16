@@ -33,6 +33,14 @@ static inline void ts_sub(struct timespec *diff, const struct timespec *t1, cons
     }
 }
 
+// Divide timespec value: div = ts / n
+static inline void ts_div(struct timespec *div, const struct timespec *ts, const int n) {
+    long nsec = ts->tv_sec * 1e9 + ts->tv_nsec;
+    nsec /= n;
+    div->tv_sec  = nsec / 1e9;
+    div->tv_nsec = nsec - div->tv_sec;
+}
+
 // Time scale
 enum TimeScale {
     TIME_SCALE_S,   // Second

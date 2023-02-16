@@ -1,3 +1,8 @@
+/**
+ * sample.c
+ *
+ * Measure calculation time of matrix multiplication
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -14,7 +19,7 @@ void randomize(double *array, const size_t n) {
     }
 }
 
-// NxN matrix multiply: C = AB
+// NxN matrix multiplication: C = AB
 void matmul(const double A[N * N], const double B[N * N], double C[N * N]) {
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++) {
@@ -26,6 +31,9 @@ void matmul(const double A[N * N], const double B[N * N], double C[N * N]) {
         }
     }
 }
+
+// Num of iterations
+#define ITER 10
 
 int main(void) {
     // Matrices
@@ -41,10 +49,11 @@ int main(void) {
 
     struct timespec start, end, diff;
     struct timespec total = { 0 };
+    struct timespec avg;
 
-    printf("%dx%d matmul time\n", N, N);
+    printf("%dx%d matmul (%d times)\n", N, N, ITER) ;
 
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < ITER; i++) {
         ts_get(&start);
 
         // Main processing
@@ -59,7 +68,12 @@ int main(void) {
         ts_accumulate(&total, &diff);
     }
 
+    // Get average from the total
+    ts_div(&avg, &total, ITER);
+
+    printf("--------------------\n");
     printf("Total: %f[ms]\n", ts_get_time_as(&total, TIME_SCALE_MS));
+    printf("Avg. : %f[ms]\n", ts_get_time_as(&avg, TIME_SCALE_MS));
 
     return 0;
 }
