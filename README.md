@@ -1,6 +1,6 @@
-# ctimer
+# timespec_utils
 
-C言語での `struct timespec` による時間計測
+C11構造体 `struct timespec`による処理時間計測のサンプル
 
 ## Sample
 
