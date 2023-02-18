@@ -1,9 +1,9 @@
 /**
- * @file ts_timer.h
+ * @file timespec_utils.h
  * @brief Timer utilities for C11 timespec struct
 */
-#ifndef TS_TIMER_H
-#define TS_TIMER_H
+#ifndef TIMESPEC_UTILS_H
+#define TIMESPEC_UTILS_H
 
 #include <time.h>
 
@@ -113,4 +113,4 @@ static inline double ts_get_time_as(const struct timespec *ts, const enum TimeSc
     return ts->tv_sec * 1e9 + ts->tv_nsec;
 }
 
-#endif // TS_TIMER_H
+#endif // TIMESPEC_UTILS_H

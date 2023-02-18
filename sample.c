@@ -1,12 +1,12 @@
 /**
  * @file sample.h
- * @brief Sample of time measurement of matmul with ts_timer.h
+ * @brief Sample of time measurement of matmul with timespec_utils.h
 */
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
-#include "ts_timer.h"
+#include "timespec_utils.h"
 
 // Row/column size
 #define N 512
