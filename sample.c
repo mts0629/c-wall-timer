@@ -1,7 +1,6 @@
 /**
- * sample.c
- *
- * Measure calculation time of matrix multiplication
+ * @file sample.h
+ * @brief Sample of time measurement of matmul with ts_timer.h
 */
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,12 +35,10 @@ void matmul(const double A[N * N], const double B[N * N], double C[N * N]) {
 #define ITER 10
 
 int main(void) {
-    // Matrices
+    // Initialize Matrices
     double A[N * N];
     double B[N * N];
     double C[N * N];
-
-    // Initialize
     srand(time(NULL));
     randomize(A, (N * N));
     randomize(B, (N * N));
@@ -53,23 +50,28 @@ int main(void) {
 
     printf("%dx%d matmul (%d times)\n", N, N, ITER) ;
 
+    // Iteration
     for (int i = 0; i < ITER; i++) {
+        // Start
         ts_get(&start);
 
         // Main processing
         matmul(A, B, C);
 
+        // End
         ts_get(&end);
 
+        // Get an elapsed time
         ts_get_diff(&diff, &start, &end);
 
         printf("[%2d] %f[ms]\n", (i + 1), ts_get_time_as(&diff, TIME_SCALE_MS));
 
-        ts_accumulate(&total, &diff);
+        // Accumulate total processing time
+        ts_accum(&total, &diff);
     }
 
-    // Get average from the total
-    ts_div(&avg, &total, ITER);
+    // Get an average
+    ts_get_avg(&avg, &total, ITER);
 
     printf("--------------------\n");
     printf("Total: %f[ms]\n", ts_get_time_as(&total, TIME_SCALE_MS));

@@ -1,75 +1,116 @@
 /**
- * ts_timer.h
- *
- * Timer operation with timespec struct
+ * @file ts_timer.h
+ * @brief Timer utilities for C11 timespec struct
 */
 #ifndef TS_TIMER_H
 #define TS_TIMER_H
 
 #include <time.h>
 
-// Get a timespec value
-static inline void ts_get(struct timespec *time) {
-    timespec_get(time, TIME_UTC);
+/**
+ * @brief Get a timespec value
+ *
+ * @param[out] ts timespec struct to store current time
+*/
+static inline void ts_get(struct timespec *ts) {
+    timespec_get(ts, TIME_UTC);
 }
 
-// Add 2 timespec values: sum = t1 - t2
-static inline void ts_add(struct timespec *sum, const struct timespec *t1, const struct timespec *t2) {
-    sum->tv_sec  = t1->tv_sec  + t2->tv_sec;
-    sum->tv_nsec = t1->tv_nsec + t2->tv_nsec;
-    if (sum->tv_nsec > 1e9) {
+/**
+ * @brief Add 2 timespec values: sum = ts1 + ts2
+ *
+ * @param[out] sum Sum of 2 timespec values
+ * @param[in] ts1 Addend 1
+ * @param[in] ts2 Addend 2
+*/
+static inline void ts_add(struct timespec *sum, const struct timespec *ts1, const struct timespec *ts2) {
+    sum->tv_sec  = ts1->tv_sec  + ts2->tv_sec;
+    sum->tv_nsec = ts1->tv_nsec + ts2->tv_nsec;
+    if (sum->tv_nsec > 1000000000) {
         sum->tv_sec++;
-        sum->tv_nsec -= 1e9;
+        sum->tv_nsec -= 1000000000;
     }
 }
 
-// Subtract 2 timespec values: diff = t1 - t2
-static inline void ts_sub(struct timespec *diff, const struct timespec *t1, const struct timespec *t2) {
-    diff->tv_sec  = t1->tv_sec  - t2->tv_sec;
-    diff->tv_nsec = t1->tv_nsec - t2->tv_nsec;
+/**
+ * @brief Subtract 2 timespec values: diff = ts1 - ts2
+ *
+ * @param[out] sum Difference of 2 timespec values
+ * @param[in] ts1 Minuend
+ * @param[in] ts2 Subtrahend
+*/
+static inline void ts_sub(struct timespec *diff, const struct timespec *ts1, const struct timespec *ts2) {
+    diff->tv_sec  = ts1->tv_sec  - ts2->tv_sec;
+    diff->tv_nsec = ts1->tv_nsec - ts2->tv_nsec;
     if (diff->tv_nsec < 0) {
         diff->tv_sec--;
-        diff->tv_nsec += 1e9;
+        diff->tv_nsec += 1000000000;
     }
 }
 
-// Divide timespec value: div = ts / n
-static inline void ts_div(struct timespec *div, const struct timespec *ts, const int n) {
-    long nsec = ts->tv_sec * 1e9 + ts->tv_nsec;
-    nsec /= n;
-    div->tv_sec  = nsec / 1e9;
-    div->tv_nsec = nsec - div->tv_sec;
+/**
+ * @brief Accumulate timespec value: sum = sum + ts
+ *
+ * @param[out] sum Accumulated time
+ * @param[in] ts Timespec value
+*/
+static inline void ts_accum(struct timespec *sum, const struct timespec *ts) {
+    ts_add(sum, sum, ts);
 }
 
-// Time scale
-enum TimeScale {
-    TIME_SCALE_S,   // Second
-    TIME_SCALE_MS,  // Milli second
-    TIME_SCALE_US,  // Micro second
-    TIME_SCALE_NS   // Nano second
-};
-
-// Get time from the timespec value with specified time scale
-static inline double ts_get_time_as(const struct timespec *time, const enum TimeScale scale) {
-    if (scale == TIME_SCALE_S) {
-        return time->tv_sec + time->tv_nsec / 1e9;
-    } else if (scale == TIME_SCALE_MS) {
-        return time->tv_sec * 1e3 + time->tv_nsec / 1e6;
-    } else if (scale == TIME_SCALE_US) {
-        return time->tv_sec * 1e6 + time->tv_nsec / 1e3;
-    }
-    // TIME_SCALE_NS
-    return time->tv_sec * 1e9 + time->tv_nsec;
-}
-
-// Accumulate timespec value: sum = sum + time
-static inline void ts_accumulate(struct timespec *sum, const struct timespec *time) {
-    ts_add(sum, sum, time);
-}
-
-// Get difference of 2 timespec values: diff = end - start
+/**
+ * @brief Get a difference of 2 timespec values: diff = end - start
+ *
+ * @param[out] diff Difference of time from the start to the end
+ * @param[in] start Start time
+ * @param[in] end End time
+*/
 static inline void ts_get_diff(struct timespec *diff, const struct timespec *start, const struct timespec *end) {
     ts_sub(diff, end, start);
+}
+
+/**
+ * @brief Get an average time of n from the total
+ *
+ * @param[out] avg Average time
+ * @param[in] total Total time
+ * @param[in] n Number of iterations
+*/
+static inline void ts_get_avg(struct timespec *avg, const struct timespec *total, const int n) {
+    long nsec = total->tv_sec * 1000000000 + total->tv_nsec;
+    nsec /= n;
+    avg->tv_sec  = nsec / 1000000000;
+    avg->tv_nsec = nsec - avg->tv_sec;
+}
+
+/**
+ * @enum TimeScale
+ * @brief Time scale for displaying timespec value
+*/
+enum TimeScale {
+    TIME_SCALE_S,   //!< Second
+    TIME_SCALE_MS,  //!< Millisecond
+    TIME_SCALE_US,  //!< Microsecond
+    TIME_SCALE_NS   //!< Nanosecond
+};
+
+/**
+ * @brief Get a time from the timespec value with a specified time scale
+ *
+ * @param[in] ts timespec value
+ * @param[in] scale Time scale
+ * @return Time value with the specified time scale
+*/
+static inline double ts_get_time_as(const struct timespec *ts, const enum TimeScale scale) {
+    if (scale == TIME_SCALE_S) {
+        return ts->tv_sec + ts->tv_nsec * (1 / 1e9);
+    } else if (scale == TIME_SCALE_MS) {
+        return ts->tv_sec * 1e3 + ts->tv_nsec * (1 / 1e6);
+    } else if (scale == TIME_SCALE_US) {
+        return ts->tv_sec * 1e6 + ts->tv_nsec * (1 / 1e3);
+    }
+    // TIME_SCALE_NS
+    return ts->tv_sec * 1e9 + ts->tv_nsec;
 }
 
 #endif // TS_TIMER_H
