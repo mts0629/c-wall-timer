@@ -1,6 +1,8 @@
 # timespec_utils
 
-C11構造体 `struct timespec`による処理時間計測のサンプル
+## Desc
+
+`struct timespec` を用いたC言語環境 (C11) での時間計測用タイマ
 
 ## Sample
 
