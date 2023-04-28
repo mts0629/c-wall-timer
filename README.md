@@ -1,28 +1,7 @@
 # timespec_utils
 
-## Desc
+## Description
 
-`struct timespec` を用いたC言語環境 (C11) での時間計測用タイマ
+Time measurement with C language.
 
-## Sample
-
-512x512 正方行列の行列積の実行時間（10回合計、平均）を測定するサンプル
-
-```
-$ gcc -std=c11 sample.c -o sample
-$ ./sample 
-512x512 matmul (10 times)
-[ 1] 452.836600[ms]
-[ 2] 489.675000[ms]
-[ 3] 470.413700[ms]
-[ 4] 447.738100[ms]
-[ 5] 446.387500[ms]
-[ 6] 450.551300[ms]
-[ 7] 446.061900[ms]
-[ 8] 443.383100[ms]
-[ 9] 472.001500[ms]
-[10] 448.730200[ms]
---------------------
-Total: 4567.778900[ms]
-Avg. : 456.777890[ms]
-```
+- C11 is required for using `struct timespec`.
