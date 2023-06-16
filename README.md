@@ -2,6 +2,14 @@
 
 ## Description
 
-Time measurement with C language.
+Time measurement on C language
 
-- C11 is required for using `struct timespec`.
+## Requirement
+
+- gcc
+    - `--std=c11`: `struct timespec` is used.
+- GNU Make
+
+## TODO
+
+- Prepare macro API to reduce penalty of function call.
