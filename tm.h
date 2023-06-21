@@ -41,7 +41,7 @@ static inline void tm_start(tm_span *span) {
     timespec_get(&span->start, TIME_UTC);
 }
 
-static inline void tm_end(tm_span *span) {
+static inline void tm_stop(tm_span *span) {
     timespec_get(&span->end, TIME_UTC);
 }
 

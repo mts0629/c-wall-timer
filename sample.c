@@ -23,7 +23,8 @@ int main(void) {
     init_array_random(C, (N * N));
 
     tm_span span;
-    tm_start(&span);    // Start measurement
+    tm_start(&span); // Start measurement
+
     // Matmul
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++) {
@@ -34,7 +35,8 @@ int main(void) {
             C[i * N + j] = mac;
         }
     }
-    tm_end(&span);      // Stop measurement
+
+    tm_stop(&span); // Stop measurement
 
     // Get elapsed time in milliseconds
     printf("%f[ms]\n", tm_get_span_timescale(&span, TIMESCALE_MS));
