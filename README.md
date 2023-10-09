@@ -33,7 +33,7 @@ A library with debug information (`libcwt.***`) can be built with option `DEBUG=
 
 ## Sample
 
-Measure wall time of target processing and print it by ms order.
+Measure a wall time of target processing between `cwt_start()` and `cwt_stop()` and print the elapsed time in millisecond.
 
 ```c
 #include "cwt.h"
@@ -41,17 +41,18 @@ Measure wall time of target processing and print it by ms order.
 void sample(void) {
     cwt_timer timer;
 
-    // Start
     cwt_start(&timer);
 
-    // Some procesing
-    sleep(1);
+    // Some processing
+    int a = 0;
+    for (int i = 0; i < 10000; i++) {
+        a += i;
+    }
 
-    // Stop
     cwt_stop(&timer);
 
     // Get elapsed time in millisecond
-    printf("%f[ms]\n", cwt_get_time(&span, CWT_TIMESCALE_MS));
+    printf("Elapsed: %f[ms]\n", cwt_get_time(&timer, CWT_MILLISECONDS));
 }
 ```
 
