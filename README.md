@@ -55,4 +55,4 @@ void sample(void) {
 }
 ```
 
-Sample programs in `sample` can be built in `build/sample` by `make sample`.
+Sample programs in `sample` can be built in `build/release/sample` by `make sample`.

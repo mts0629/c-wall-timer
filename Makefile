@@ -1,5 +1,5 @@
 CC     := gcc
-CFLAGS  = -Wall -Wextra -Wpedantic -std=c11 -I./$(SRC_DIR)
+CFLAGS  = -Wall -Wextra -Wpedantic -std=c11 -I$(SRC_DIR)
 
 DEBUG ?= no
 ifeq ($(DEBUG), yes)
@@ -13,18 +13,16 @@ else
 endif
 
 SRC_DIR := src
-BUILD_DIR := build
+BUILD_DIR := build/$(CONFIG)
 SRCS := $(wildcard $(SRC_DIR)/*.c)
-OBJS := $(addprefix $(BUILD_DIR)/$(CONFIG), /$(SRCS:.c=.o))
+OBJS := $(addprefix $(BUILD_DIR), /$(SRCS:.c=.o))
 
 SAMP_DIR := sample
 SAMP_SRCS := $(wildcard $(SAMP_DIR)/*.c)
-SAMPLES := $(addprefix build, /$(SAMP_SRCS:.c=))
+SAMPLES := $(addprefix $(BUILD_DIR), /$(SAMP_SRCS:.c=))
 
-STATIC_LIB = $(BUILD_DIR)/$(CONFIG)/$(LIB_NAME).a
-SHARED_LIB = $(BUILD_DIR)/$(CONFIG)/$(LIB_NAME).so
-
-LDFLAGS = -l$(STATIC_LIB)
+STATIC_LIB = $(BUILD_DIR)/$(LIB_NAME).a
+SHARED_LIB = $(BUILD_DIR)/$(LIB_NAME).so
 
 AR := ar rc
 RM := rm -rf
@@ -43,15 +41,15 @@ $(SHARED_LIB): $(OBJS)
 
 shared: $(SHARED_LIB)
 
-$(BUILD_DIR)/$(CONFIG)/%.o: %.c
+$(BUILD_DIR)/%.o: %.c
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-sample: $(SAMPLES)
-
 $(BUILD_DIR)/$(SAMP_DIR)/%: $(SAMP_DIR)/%.c $(STATIC_LIB)
 	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) $< -L./$(BUILD_DIR)/$(CONFIG) $(LDFLAGS) -o $@
+	$(CC) $(CFLAGS) $^ -o $@
+
+sample: $(SAMPLES)
 
 clean:
 	$(RM) $(BUILD_DIR)
