@@ -9,10 +9,11 @@
 - GCC
     - `-std=c11`: `struct timespec` is used.
 - GNU Make
+- GNU Binutils (ar)
 
 ## Build
 
-Library `libcwt.a` is built in `build/release/` by `make`.
+Build static library `libcwt.a` in `build/release` by `make` or `make static`.
 
 ```sh
 $ make
@@ -20,7 +21,15 @@ gcc -Wall -Wextra -Wpedantic -std=c11 -I./src -O2 -c src/cwt.c -o build/release/
 ar rc build/release/libcwt.a build/release/src/cwt.o
 ```
 
-Debug build: `libcwtd.a` is built in `./build/debug` by `make DEBUG=yes`.
+Build shared library `libcwt.so` in `build/release` by `make shared`.
+
+```sh
+$ make shared
+gcc -Wall -Wextra -Wpedantic -std=c11 -I./src -O2 -c src/cwt.c -o build/release/src/cwt.o
+gcc -Wall -Wextra -Wpedantic -std=c11 -I./src -O2 -shared -fPIC build/release/src/cwt.o -o build/release/libcwt.so
+```
+
+A library with debug information (`libcwt.***`) can be built with option `DEBUG=yes` (e.g. `make shared DEBUG=yes`) in `build/debug`.
 
 ## Sample
 
@@ -46,4 +55,4 @@ void sample(void) {
 }
 ```
 
-Sample programs in `sample/` can be built into `build/sample` by `make sample`.
+Sample programs in `sample` can be built in `build/sample` by `make sample`.

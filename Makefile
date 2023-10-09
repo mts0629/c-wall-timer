@@ -5,13 +5,11 @@ DEBUG ?= no
 ifeq ($(DEBUG), yes)
 	CFLAGS += -O0 -g
 	CONFIG := debug
-	LIB_NAME = libcwtd.a
-	LDFLAGS = -lcwtd
+	LIB_NAME = libcwtd
 else
 	CFLAGS += -O2
 	CONFIG := release
-	LIB_NAME = libcwt.a
-	LDFLAGS = -lcwt
+	LIB_NAME = libcwt
 endif
 
 SRC_DIR := src
@@ -23,15 +21,27 @@ SAMP_DIR := sample
 SAMP_SRCS := $(wildcard $(SAMP_DIR)/*.c)
 SAMPLES := $(addprefix build, /$(SAMP_SRCS:.c=))
 
+STATIC_LIB = $(BUILD_DIR)/$(CONFIG)/$(LIB_NAME).a
+SHARED_LIB = $(BUILD_DIR)/$(CONFIG)/$(LIB_NAME).so
+
+LDFLAGS = -l$(STATIC_LIB)
+
 AR := ar rc
 RM := rm -rf
 
-.PHONY: all sample clean
+.PHONY: all static shared sample clean
 
-all: $(LIB_NAME)
+all: static
 
-$(LIB_NAME): $(OBJS)
-	$(AR) $(BUILD_DIR)/$(CONFIG)/$(LIB_NAME) $^
+$(STATIC_LIB): $(OBJS)
+	$(AR) $@ $^
+
+static: $(STATIC_LIB)
+
+$(SHARED_LIB): $(OBJS)
+	$(CC) $(CFLAGS) -shared -fPIC $^ -o $@
+
+shared: $(SHARED_LIB)
 
 $(BUILD_DIR)/$(CONFIG)/%.o: %.c
 	@mkdir -p $(dir $@)
@@ -39,7 +49,7 @@ $(BUILD_DIR)/$(CONFIG)/%.o: %.c
 
 sample: $(SAMPLES)
 
-$(BUILD_DIR)/$(SAMP_DIR)/%: $(SAMP_DIR)/%.c $(LIB_NAME)
+$(BUILD_DIR)/$(SAMP_DIR)/%: $(SAMP_DIR)/%.c $(STATIC_LIB)
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $< -L./$(BUILD_DIR)/$(CONFIG) $(LDFLAGS) -o $@
 
