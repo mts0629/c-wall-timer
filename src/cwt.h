@@ -8,19 +8,17 @@ typedef struct cwt_timer {
     struct timespec end;
 } cwt_timer;
 
-typedef enum cwt_timescale {
-    CWT_TIMESCALE_S,
-    CWT_TIMESCALE_MS,
-    CWT_TIMESCALE_US,
-    CWT_TIMESCALE_NS
-} cwt_timescale;
-
-typedef struct cwt_timer cwt_timer;
+typedef enum cwt_scale {
+    CWT_SECONDS,
+    CWT_MILLISECONDS,
+    CWT_MICROSECONDS,
+    CWT_NANOSECONDS
+} cwt_scale;
 
 void cwt_start(cwt_timer* timer);
 
 void cwt_stop(cwt_timer* timer);
 
-double cwt_get_time(const cwt_timer* timer, const cwt_timescale scale);
+double cwt_get_time(const cwt_timer* timer, const cwt_scale scale);
 
 #endif // CWT_H
