@@ -15,11 +15,11 @@ endif
 SRC_DIR := src
 BUILD_DIR := build/$(CONFIG)
 SRCS := $(wildcard $(SRC_DIR)/*.c)
-OBJS := $(addprefix $(BUILD_DIR), /$(SRCS:.c=.o))
+OBJS := $(addprefix $(BUILD_DIR)/, $(SRCS:.c=.o))
 
 SAMP_DIR := sample
 SAMP_SRCS := $(wildcard $(SAMP_DIR)/*.c)
-SAMPLES := $(addprefix $(BUILD_DIR), /$(SAMP_SRCS:.c=))
+SAMPLES := $(addprefix $(BUILD_DIR)/, $(SAMP_SRCS:.c=))
 
 STATIC_LIB = $(BUILD_DIR)/$(LIB_NAME).a
 SHARED_LIB = $(BUILD_DIR)/$(LIB_NAME).so

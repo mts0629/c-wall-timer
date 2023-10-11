@@ -34,3 +34,19 @@ double cwt_get_time(const cwt_timer* timer, const cwt_scale scale) {
     struct timespec elapsed = get_diff_timespec(&timer->start, &timer->end);
     return convert_scale(&elapsed, scale);
 }
+
+void cwt_rap_start(cwt_rap_timer* timer) {
+    timer->rap_count = 0;
+    timespec_get(&timer->rap[timer->rap_count], TIME_UTC);
+    timer->rap_count++;
+}
+
+void cwt_rap_record(cwt_rap_timer* timer) {
+    timespec_get(&timer->rap[timer->rap_count], TIME_UTC);
+    timer->rap_count++;
+}
+
+double cwt_get_rap_time(cwt_rap_timer* timer, const int rap_index, const cwt_scale scale) {
+    struct timespec elapsed = get_diff_timespec(&timer->rap[rap_index], &timer->rap[rap_index + 1]);
+    return convert_scale(&elapsed, scale);
+}
