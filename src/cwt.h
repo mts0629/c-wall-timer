@@ -33,6 +33,14 @@ void cwt_stop(cwt_timer* timer);
 
 double cwt_get_time(const cwt_timer* timer, const cwt_scale scale);
 
+#define CWT_TIMER_BLOCK(time, scale, ...) { \
+    cwt_timer t; \
+    cwt_start(&t); \
+    __VA_ARGS__; \
+    cwt_stop(&t); \
+    (time) = cwt_get_time(&t, (scale)); \
+}
+
 void cwt_rap_start(cwt_rap_timer* timer);
 
 void cwt_rap_record(cwt_rap_timer* timer);
