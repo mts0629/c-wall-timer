@@ -6,7 +6,7 @@
 
 ## Requirements
 
-- GCC
+- gcc
     - `-std=c11`: `struct timespec` is used.
 - GNU Make
 - GNU Binutils (ar)
@@ -31,28 +31,66 @@ gcc -Wall -Wextra -Wpedantic -std=c11 -I./src -O2 -shared -fPIC build/release/sr
 
 A library with debug information (`libcwt.***`) can be built with option `DEBUG=yes` (e.g. `make shared DEBUG=yes`) in `build/debug`.
 
-## Sample
+## Usage
 
-Measure a wall time of target processing between `cwt_start()` and `cwt_stop()` and print the elapsed time in millisecond.
+### Measure elapsed time
+
+Start/stop the timer by `cwt_start()`/`cwt_stop()` and get elapsed time by `cwt_get_time()` in specified timescale.
+- 4 types of timescales: seconds, milliseconds, microseconds, nanoseconds
+- `cwt_get_time()` needs calculation, therefore it's better to call it after the processing.
 
 ```c
-#include "cwt.h"
+cwt_timer timer;
 
-void sample(void) {
-    cwt_timer timer;
+cwt_start(&timer);
 
-    cwt_start(&timer);
+// Some processing
+// ...
 
-    // Some processing
-    int a = 0;
-    for (int i = 0; i < 10000; i++) {
-        a += i;
+cwt_stop(&timer);
+
+printf("Elapsed: %f[ms]\n", cwt_get_time(&timer, CWT_MILLISECONDS);
+```
+
+Elapsed time of specified processing can be get automatically by `CWT_TIMER_BLOCK()`.
+- Tokens decleared in the processing cannot be referred later because of using block scope.
+
+```c
+double time;
+
+CWT_TIMER_BLOCK(
+    time,
+    CWT_MILLISECONDS,
+    {
+        // Some processing
+        // ...
     }
+);
 
-    cwt_stop(&timer);
+printf("Elapsed: %f[ms]\n", time);
+```
 
-    // Get elapsed time in millisecond
-    printf("Elapsed: %f[ms]\n", cwt_get_time(&timer, CWT_MILLISECONDS));
+### Measure lap time
+
+Initialize a lap timer object by `CWT_LAP_TIMER_INIT` with the max count of the laps.
+
+Start measurement of lap time by `cwt_lap_start()`, and measure lap time by `cwt_lap_record()`.
+
+Elapsed time of the specified lap can be get by `cwt_get_lap_time()`.
+
+```c
+cwt_lap_timer timer = CWT_LAP_TIMER_INIT(10);
+
+cwt_lap_start(&timer);
+
+for (int i = 0; i < 10; i++) {
+    // Some processing
+    // ...
+    cwt_lap_record(&timer);
+}
+
+for (int i = 0; i < 10; i++) {
+    printf("Elapsed: %f[ms]\n", cwt_get_lap_time(&timer, i, CWT_MILLISECONDS));
 }
 ```
 
