@@ -1,5 +1,5 @@
 CC     := gcc
-CFLAGS  = -Wall -Wextra -Wpedantic -std=c11 -I$(SRC_DIR)
+CFLAGS = -Wall -Wextra -Wpedantic -std=c11 -I$(SRC_DIR)
 
 DEBUG ?= no
 ifeq ($(DEBUG), yes)
@@ -45,9 +45,10 @@ $(BUILD_DIR)/%.o: %.c
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
+# Build with -O0 to avoid shortening of processing times by optimization
 $(BUILD_DIR)/$(SAMP_DIR)/%: $(SAMP_DIR)/%.c $(STATIC_LIB)
 	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) $^ -o $@
+	$(CC) $(CFLAGS) -O0 $^ -o $@ # O0
 
 sample: $(SAMPLES)
 

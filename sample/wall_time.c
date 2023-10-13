@@ -21,8 +21,8 @@ int main(void) {
     CWT_TIMER_BLOCK(ms, CWT_MILLISECONDS,
         {
             int a = 0;
-            for (int i = 0; i < 100; i++) {
-                for (int j = 0; j < 100; j++) {
+            for (int i = 0; i < 1000; i++) {
+                for (int j = 0; j < 10000; j++) {
                     a += j;
                 }
             }
