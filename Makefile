@@ -48,7 +48,7 @@ $(BUILD_DIR)/%.o: %.c
 # Build with -O0 to avoid shortening of processing times by optimization
 $(BUILD_DIR)/$(SAMP_DIR)/%: $(SAMP_DIR)/%.c $(STATIC_LIB)
 	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -O0 $^ -o $@ # O0
+	$(CC) $(CFLAGS) -O0 $^ -o $@
 
 sample: $(SAMPLES)
 

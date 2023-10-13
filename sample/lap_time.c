@@ -3,9 +3,9 @@
 #include "cwt.h"
 
 int main(void) {
-    cwt_rap_timer timer = CWT_RAP_TIMER_INIT(10);
+    cwt_lap_timer timer = CWT_LAP_TIMER_INIT(10);
 
-    cwt_rap_start(&timer);
+    cwt_lap_start(&timer);
 
     for (int i = 0; i < 10; i++) {
         // Some procesing
@@ -15,12 +15,12 @@ int main(void) {
                 a += j;
             }
         }
-        cwt_rap_record(&timer);
+        cwt_lap_record(&timer);
     }
 
     // Get elapsed time in millisecond
     for (int i = 0; i < 10; i++) {
-        printf("[%d] Elapsed: %f[ms]\n", i, cwt_get_rap_time(&timer, i, CWT_MILLISECONDS));
+        printf("[%d] Elapsed: %f[ms]\n", i, cwt_get_lap_time(&timer, i, CWT_MILLISECONDS));
     }
 
     return 0;

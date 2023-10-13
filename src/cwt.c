@@ -35,18 +35,18 @@ double cwt_get_time(const cwt_timer* timer, const cwt_scale scale) {
     return convert_scale(&elapsed, scale);
 }
 
-void cwt_rap_start(cwt_rap_timer* timer) {
-    timer->rap_count = 0;
-    timespec_get(&timer->rap[timer->rap_count], TIME_UTC);
-    timer->rap_count++;
+void cwt_lap_start(cwt_lap_timer* timer) {
+    timer->lap_count = 0;
+    timespec_get(&timer->lap[timer->lap_count], TIME_UTC);
+    timer->lap_count++;
 }
 
-void cwt_rap_record(cwt_rap_timer* timer) {
-    timespec_get(&timer->rap[timer->rap_count], TIME_UTC);
-    timer->rap_count++;
+void cwt_lap_record(cwt_lap_timer* timer) {
+    timespec_get(&timer->lap[timer->lap_count], TIME_UTC);
+    timer->lap_count++;
 }
 
-double cwt_get_rap_time(cwt_rap_timer* timer, const int rap_index, const cwt_scale scale) {
-    struct timespec elapsed = get_diff_timespec(&timer->rap[rap_index], &timer->rap[rap_index + 1]);
+double cwt_get_lap_time(cwt_lap_timer* timer, const int lap_index, const cwt_scale scale) {
+    struct timespec elapsed = get_diff_timespec(&timer->lap[lap_index], &timer->lap[lap_index + 1]);
     return convert_scale(&elapsed, scale);
 }
