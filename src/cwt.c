@@ -8,7 +8,7 @@
  * @brief Calculate difference between two time points
  * @param[in] start Start time
  * @param[in] end End time
- * @return Difference time between the timepoints
+ * @return Difference time between the two timepoints
 */
 static inline struct timespec get_diff_timespec(const struct timespec* start, const struct timespec* end) {
     time_t sec = end->tv_sec - start->tv_sec;
@@ -29,10 +29,10 @@ void cwt_stop(cwt_timer* timer) {
 }
 
 /**
- * @brief Convert time by specified timescale
+ * @brief Convert time by specified time scale
  * @param[in] time Time
- * @param[in] scale Timescale
- * @return Time expression in specified timescale
+ * @param[in] scale Time scale
+ * @return Time expression in specified time scale
 */
 static inline double convert_by_timescale(const struct timespec* time, const cwt_scale scale) {
     if (scale == CWT_SECONDS) {
