@@ -1,5 +1,5 @@
-CC     := gcc
-CFLAGS = -Wall -Wextra -Wpedantic -std=c11 -I$(SRC_DIR)
+CC := gcc
+CFLAGS = -Wall -Wextra -Wpedantic -std=c11 -I$(INC_DIR)
 
 DEBUG ?= no
 ifeq ($(DEBUG), yes)
@@ -11,6 +11,8 @@ else
 	CONFIG := release
 	LIB_NAME = libcwt
 endif
+
+INC_DIR = include
 
 SRC_DIR := src
 BUILD_DIR := build/$(CONFIG)
@@ -36,7 +38,7 @@ $(STATIC_LIB): $(OBJS)
 
 static: $(STATIC_LIB)
 
-$(SHARED_LIB): $(OBJS)
+$(SHARED_LIB): $(SRCS)
 	$(CC) $(CFLAGS) -shared -fPIC $^ -o $@
 
 shared: $(SHARED_LIB)

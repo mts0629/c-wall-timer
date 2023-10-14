@@ -6,6 +6,7 @@
 
 /**
  * @brief Calculate difference between two time points
+ *
  * @param[in] start Start time
  * @param[in] end End time
  * @return Difference time between the two timepoints
@@ -30,6 +31,7 @@ void cwt_stop(cwt_timer* timer) {
 
 /**
  * @brief Convert time by specified time scale
+ *
  * @param[in] time Time
  * @param[in] scale Time scale
  * @return Time expression in specified time scale
